@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "platform-for-purchases"
+version = "0.1.0"
+description = ""
+authors = ["DenisKhudyakov <denis.hudyakov27@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.1.3"
+black = "^24.10.0"
+flake8 = "^7.1.1"
+mypy = "^1.13.0"
+isort = "^5.13.2"
+pandas = "^2.2.3"
+python-dotenv = "^1.0.1"
+psycopg2-binary = "^2.9.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
