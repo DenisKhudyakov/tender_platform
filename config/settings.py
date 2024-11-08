@@ -10,14 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
-import os
-
-from dotenv import load_dotenv, find_dotenv
+from dotenv import find_dotenv, load_dotenv
 
 if not find_dotenv():
-    exit('File .env not found')
+    exit("File .env not found")
 else:
     load_dotenv()
 
@@ -49,6 +48,8 @@ INSTALLED_APPS = [
     # my_app
     "tender",
     "users",
+    "crispy_forms",
+    "crispy_bootstrap5"
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,9 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = "users.User"
+LOGIN_REDIRECT_URL = "/"  # URL to redirect to after login
+LOGOUT_REDIRECT_URL = "/"  # URL to redirect to after logout
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
