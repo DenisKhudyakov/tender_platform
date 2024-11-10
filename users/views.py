@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from users.forms import SignUpForm, LoginForm
+from users.forms import LoginForm, SignUpForm
 
 
 def index(request):

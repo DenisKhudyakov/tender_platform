@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     "tender",
     "users",
     "crispy_forms",
-    "crispy_bootstrap5"
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [

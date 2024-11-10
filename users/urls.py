@@ -3,13 +3,13 @@ from django.urls import path
 
 from users import views
 from users.apps import UsersConfig
-from users.views import UserLogin, UserCreate
+from users.views import UserCreate, UserLogin
 
 app_name = UsersConfig.name
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path('login/', UserLogin.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
-    path('register/', UserCreate.as_view(), name='register'),
+    path("login/", UserLogin.as_view(), name="login"),
+    path("logout/", LogoutView.as_view(), name="logout"),
+    path("register/", UserCreate.as_view(), name="register"),
 ]
