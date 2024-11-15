@@ -10,6 +10,7 @@ class ProductAdmin(admin.ModelAdmin):
         "id",
         "name",
         "article",
+        "measurement"
     )
 
 

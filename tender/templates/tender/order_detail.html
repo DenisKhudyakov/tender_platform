@@ -1,0 +1,6 @@
+{% extends 'tender/base.html' %}
+{% block content %}
+    <h2>Заявка создана {{ order.id }}</h2>
+    <a href="{% url 'tender:product_list' pk=order.id %}">Чтобы добавить товары в заказ перейдите по ссылке</a>
+
+{% endblock %}

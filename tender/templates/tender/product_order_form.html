@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<h2>Создать заявку с товарами</h2>
+<form method="post">
+    {% csrf_token %}
+
+    {{ order_form.as_p }}
+
+    <h3>Продукты</h3>
+    <div id="product_formset">
+        {% for form in product_formset %}
+            <div class="form-row">
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+    </div>
+    <button type="button" id="add_product_form">Добавить продукт</button>
+
+    <h3>Товары в заказе</h3>
+    <div id="order_product_formset">
+        {% for form in order_product_formset %}
+            <div class="form-row">
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+    </div>
+
+
+</body>
+</html>

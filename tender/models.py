@@ -14,6 +14,7 @@ class Product(models.Model):
     article = models.CharField(
         max_length=255, verbose_name="Артикул", help_text="Артикул товара", **NULLABLE
     )
+    measurement = models.CharField(max_length=10, verbose_name='Единица измерения', **NULLABLE)
 
     def __str__(self):
         return self.name
@@ -48,9 +49,9 @@ class OrderProduct(models.Model):
     Смежная таблица заявок и продуктов
     """
 
-    order = models.ForeignKey(Order, related_name="orders", on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, related_name="orders", on_delete=models.CASCADE, verbose_name='Заявка')
     product = models.ForeignKey(
-        Product, related_name="products", on_delete=models.CASCADE
+        Product, related_name="products", on_delete=models.CASCADE, verbose_name='Продукты'
     )
     amounts = models.CharField(
         max_length=50, verbose_name="Количество", help_text="Количество товара в заявке"
