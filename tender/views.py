@@ -17,6 +17,11 @@ class OrderDetailView(DetailView):
     template_name = "tender/order_detail.html"
     context_object_name = 'order'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['products'] = self.object.product.all()
+        return context
+
 
 class ProductCreateView(CreateView):
     model = Product
@@ -50,7 +55,6 @@ class ProductListView(ListView):
         order = get_object_or_404(Order, pk=order_pk)
         product_id = request.POST.get('product_id')
         product = get_object_or_404(Product, pk=product_id)
-
         form = OrderProductForm(request.POST)
 
         if form.is_valid():
@@ -63,17 +67,20 @@ class ProductListView(ListView):
             if not created:  # Если запись уже существует, обновляем количество
                 order_product.amounts += form.cleaned_data['amounts']
                 order_product.save()
-        return redirect('tender:order_detail', pk=order_pk)
+        return redirect('tender:product_list', pk=order_pk)
 
 
-class OrderProductCreateView(CreateView):
+class OrderProductListView(ListView):
     model = OrderProduct
-    form_class = OrderProductForm
-    template_name = 'tender/order_detail.html'
+    context_object_name = 'order_products'
 
-    def form_valid(self, form):
-        product_id = self.kwargs['pk']
-        product = get_object_or_404(Product, pk=product_id)
-        order_product = OrderProduct.objects.get_or_create(product=product,
-                                                           defaults={'amounts': form.cleaned_data['amounts']})[0]
-        return redirect('tender:order_detail', order_product.order.id)
+
+class OrderProductDetailView(DetailView):
+    model = OrderProduct
+    context_object_name = 'order_product'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        order = self.object.order
+        context['products'] = OrderProduct.objects.filter(order=order)
+        return context

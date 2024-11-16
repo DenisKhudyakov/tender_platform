@@ -53,8 +53,8 @@ class OrderProduct(models.Model):
     product = models.ForeignKey(
         Product, related_name="products", on_delete=models.CASCADE, verbose_name='Продукты'
     )
-    amounts = models.CharField(
-        max_length=50, verbose_name="Количество", help_text="Количество товара в заявке"
+    amounts = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name="Количество", help_text="Количество товара в заявке", **NULLABLE
     )
 
     def __str__(self):

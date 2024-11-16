@@ -1,0 +1,24 @@
+{% extends 'tender/base.html' %}
+{% block content %}
+    <h3>Заявка номер {{ object.order.id }}</h3>
+    <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+        <thead>
+            <tr style="background-color: #f2f2f2;">
+                <th style="border: 1px solid black; padding: 8px; text-align: left;">Артикул</th>
+                <th style="border: 1px solid black; padding: 8px; text-align: left;">Наименование товара</th>
+                <th style="border: 1px solid black; padding: 8px; text-align: left;">Ед. измерения</th>
+                <th style="border: 1px solid black; padding: 8px; text-align: left;">Количество</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in products %}
+            <tr>
+                <td style="border: 1px solid black; padding: 8px;">{{ item.product.article }}</td>
+                <td style="border: 1px solid black; padding: 8px;">{{ item.product.name }}</td>
+                <td style="border: 1px solid black; padding: 8px;">{{ item.product.measurement }}</td>
+                <td style="border: 1px solid black; padding: 8px;">{{ item.amounts }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

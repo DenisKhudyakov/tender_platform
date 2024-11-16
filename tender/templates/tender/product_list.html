@@ -1,8 +1,7 @@
 {% extends 'tender/base.html' %}
 {% block content %}
 <h2>Список товаров</h2>
-<form method="post">
-    {% csrf_token %}
+
     <table>
         <thead>
             <tr>
@@ -16,16 +15,16 @@
             <tr>
                 <td>{{ product.name }}</td>
                 <td>
-                    <input type="number" name="amounts" min="1" required>
-                    <input type="hidden" name="product_id" value="{{ product.id }}">
-                </td>
-                <td>
-                    <button type="submit">Добавить в заказ</button>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="number" name="amounts" min="1" required>
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <button type="submit">Добавить в заказ</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-</form>
 <a href="{% url 'tender:order_detail' order_pk %}">Вернуться к заказу</a>
 {% endblock %}

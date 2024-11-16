@@ -1,0 +1,7 @@
+{% extends 'tender/base.html' %}
+{% block content %}
+    <h3>Заявки для поставщиков</h3>
+    {% for order_product in order_products %}
+        <a href="{% url 'tender:order_product_detail' pk=order_product.id %}">{{ order_product.order }}</a><br>
+    {% endfor %}
+{% endblock %}
