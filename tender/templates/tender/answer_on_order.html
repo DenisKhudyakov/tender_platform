@@ -1,0 +1,16 @@
+{% extends 'tender/base.html' %}
+{% block content %}
+<h3>Продукты, связанные с заявкой:</h3>
+<ul>
+    {% for product in products %}
+        <li>{{ product.name }}</li>
+    {% endfor %}
+</ul>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+</form>
+
+
+{% endblock %}

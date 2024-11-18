@@ -1,9 +1,10 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, FormView
 
-from tender.forms import ProductForm, OrderForm, OrderProductForm
-from tender.models import OrderProduct, Order, Product
+from tender.forms import ProductForm, OrderForm, OrderProductForm, AnswerOnOrderForm
+from tender.models import OrderProduct, Order, Product, AnswerOnOrder
 
 
 class OrderListView(ListView):
@@ -74,6 +75,9 @@ class OrderProductListView(ListView):
     model = OrderProduct
     context_object_name = 'order_products'
 
+    def get_queryset(self):
+        return super().get_queryset().distinct('order')
+
 
 class OrderProductDetailView(DetailView):
     model = OrderProduct
@@ -84,3 +88,47 @@ class OrderProductDetailView(DetailView):
         order = self.object.order
         context['products'] = OrderProduct.objects.filter(order=order)
         return context
+
+
+class AnswerOnOrderCreateView(CreateView):
+    model = AnswerOnOrder
+    template_name = 'tender/answer_on_order.html'
+    form_class = AnswerOnOrderForm
+
+    def form_valid(self, form):
+
+        order_product_id = self.kwargs['pk']
+        order_product = OrderProduct.objects.get(pk=order_product_id)
+        order = order_product.order
+        form.instance.order = order
+        form.instance.supplier = self.request.user  # Поставщик - текущий пользователь
+
+        print(f"Создается ответ на заказ с ID {order.id}, продукт {form.instance.product.name}")
+        form.save()
+        return redirect(reverse('tender:answer_on_order', args=[self.kwargs['pk']]))
+
+    def get_context_data(self, **kwargs):
+        """
+        Добавляем список продуктов для заявки в контекст.
+        """
+        context = super().get_context_data(**kwargs)
+
+        order_product_id = self.kwargs['pk']
+        order_product = OrderProduct.objects.get(pk=order_product_id)
+        order_id = order_product.order.pk
+        order_products = OrderProduct.objects.filter(order=order_id)
+
+        products = [order_product.product for order_product in order_products]
+        context['products'] = products
+
+        return context
+
+
+
+
+
+
+
+
+
+

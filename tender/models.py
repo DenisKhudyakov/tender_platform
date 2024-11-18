@@ -90,10 +90,10 @@ class AnswerOnOrder(models.Model):
         on_delete=models.CASCADE,
     )
     price = models.CharField(
-        max_length=255, verbose_name="Цена", help_text="Стоимость товара"
+        max_length=255, verbose_name="Цена", help_text="Стоимость товара", default=0
     )
     delivery_time = models.CharField(
-        max_length=255, verbose_name="Срок поставки", help_text="Срок поставки"
+        max_length=255, verbose_name="Срок поставки", help_text="Срок поставки", default=None
     )
 
     def __str__(self):

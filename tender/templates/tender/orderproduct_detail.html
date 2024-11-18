@@ -21,4 +21,5 @@
         {% endfor %}
         </tbody>
     </table>
+    <a href="{% url 'tender:answer_on_order' object.id %}">Для того чтобы оставить ответ, перейдите по ссылке</a>
 {% endblock %}
