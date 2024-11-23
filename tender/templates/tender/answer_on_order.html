@@ -1,29 +1,27 @@
 {% extends 'tender/base.html' %}
+{% load my_tags %}
 {% block content %}
-    <h1>Ответ на заявку {{ order.id }}</h1>
+    <h2>Товары в заявке номер {{ order.id }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}  <!-- Скрытая форма управления для formset -->
+    {% for form, product in formset.forms|zip_lists:order_products %}
+        <div class="form-row">
+            <label>Продукт: {{ product }}</label>  <!-- Здесь выводим название продукта -->
+            {{ form.order_product }}  <!-- Это скрытое поле, если необходимо -->
 
-    <p><strong>Список товаров в заявке:</strong></p>
-    <ul>
-        {% for order_product in order_products.all %}
-            <li>{{ order_product.product.name }} ({{ order_product.amounts }})</li>
-        {% endfor %}
-    </ul>
+            <div>
+                {{ form.price.label }} {{ form.price }}  <!-- Поле цены -->
+            </div>
+            <div>
+                {{ form.delivery_time.label }} {{ form.delivery_time }}  <!-- Поле времени доставки -->
+            </div>
+        </div>
+    {% endfor %}
+    <button type="submit">Отправить</button>
+</form>
 
-    <form method="post">
-        {% csrf_token %}
-        <table>
-            {{ formset.management_form }}
-            {% for form in formset %}
-                <tr>
-                    <td>{{ form.order_product.label_tag }} {{ form.order_product }}</td>
-                    <td>{{ form.price.label_tag }} {{ form.price }}</td>
-                    <td>{{ form.delivery_time.label_tag }} {{ form.delivery_time }}</td>
-                </tr>
-            {% endfor %}
-        </table>
 
-        <button type="submit">Сохранить</button>
-    </form>
 
 
 

@@ -25,10 +25,11 @@ class OrderProductForm(forms.ModelForm):
 class AnswerOnOrderForm(forms.ModelForm):
     class Meta:
         model = AnswerOnOrder
-        fields = ['supplier', 'order_product', 'price', 'delivery_time']
+        fields = ['order_product', 'price', 'delivery_time']
         widgets = {
             'price': forms.TextInput(attrs={'class': 'form-control'}),
             'delivery_time': forms.TextInput(attrs={'class': 'form-control'}),
+            'order_product': forms.HiddenInput()
         }
 
 

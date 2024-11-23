@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import formset_factory, modelformset_factory
+from django.forms import formset_factory
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, FormView
@@ -91,38 +91,28 @@ class OrderProductDetailView(DetailView):
         return context
 
 
-def create_answer_on_order(request, pk):  # Изменено order_id на pk
-    # Получаем заявку по переданному ID
+def create_answer_on_order(request, pk):
     order = get_object_or_404(OrderProduct, pk=pk).order
 
-    # Получаем товары, связанные с заявкой
     order_products = OrderProduct.objects.filter(order=order)
 
-    # Создаем форму с использованием formset_factory
-    AnswerOnOrderFormSet = modelformset_factory(
-        AnswerOnOrder,
-        fields=('order_product', 'price', 'delivery_time'),
-        extra=len(order_products),
-        can_delete=False
+    AnswerOnOrderFormSet = formset_factory(
+        AnswerOnOrderForm,
+        extra=0,
     )
 
     if request.method == 'POST':
-        formset = AnswerOnOrderFormSet(request.POST, queryset=AnswerOnOrder.objects.none())
+        formset = AnswerOnOrderFormSet(request.POST)
 
         if formset.is_valid():
-            # Сохраняем все данные формы
-            instances = formset.save(commit=False)
-            for instance in instances:
-                instance.supplier = request.user  # Устанавливаем текущего пользователя как поставщика
-                instance.save()
-            return redirect('order_detail', pk=order.id)  # Перенаправление после сохранения
+            for form in formset.forms:
+                form.supplier = request.user  # Устанавливаем текущего пользователя как поставщика
+                form.save()
+            return redirect('tender:order_list')  # Перенаправление после сохранения
     else:
-        # Инициализируем форму, подставляя order_product для каждого товара
-        initial_data = [
-            {'order_product': op} for op in order_products
-        ]
-        formset = AnswerOnOrderFormSet(queryset=AnswerOnOrder.objects.none(), initial=initial_data)
 
+        initial_data = [{'order_product': product} for product in order_products]
+        formset = AnswerOnOrderFormSet(initial=initial_data)
     context = {
         'formset': formset,
         'order': order,
