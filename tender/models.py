@@ -58,7 +58,7 @@ class OrderProduct(models.Model):
     )
 
     def __str__(self):
-        return f"{self.product.name} - {self.amounts}"
+        return f"{self.product.article} - {self.product.name}: {self.amounts}"
 
     class Meta:
         verbose_name = "Товар в заявке"
@@ -69,13 +69,6 @@ class AnswerOnOrder(models.Model):
     """
     Модель ответов на заявку.
     """
-
-    order = models.ForeignKey(
-        Order,
-        verbose_name="Номер заявки",
-        related_name="answer_orders",
-        on_delete=models.CASCADE,
-    )
     supplier = models.ForeignKey(
         User,
         related_name="suppliers",
@@ -83,11 +76,8 @@ class AnswerOnOrder(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
-    product = models.ForeignKey(
-        Product,
-        related_name="answer_products",
-        verbose_name="Продукты",
-        on_delete=models.CASCADE,
+    order_product = models.ForeignKey(
+        OrderProduct, related_name='order_product', on_delete=models.CASCADE, verbose_name='Заявка',
     )
     price = models.CharField(
         max_length=255, verbose_name="Цена", help_text="Стоимость товара", default=0
@@ -97,7 +87,7 @@ class AnswerOnOrder(models.Model):
     )
 
     def __str__(self):
-        return f"номер заявки{self.order.id}, Поставщик {self.supplier} - {self.product.name}"
+        return f"номер заявки{self.order_product.order.pk}, Поставщик {self.supplier} - {self.order_product.product.name}"
 
     class Meta:
         verbose_name = "Ответ"

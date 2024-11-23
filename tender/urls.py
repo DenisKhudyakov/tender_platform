@@ -2,7 +2,7 @@ from django.urls import path
 
 from tender.apps import TenderConfig
 from tender.views import OrderListView, OrderDetailView, ProductCreateView, OrderCreateView, ProductListView, \
-    OrderProductListView, OrderProductDetailView, AnswerOnOrderCreateView
+    OrderProductListView, OrderProductDetailView, create_answer_on_order
 
 app_name = TenderConfig.name
 
@@ -14,6 +14,6 @@ urlpatterns = [
     path('orders/<int:pk>/products/', ProductListView.as_view(), name='product_list'),
     path("", OrderProductListView.as_view(), name="order_products"),
     path('order_product/<int:pk>/', OrderProductDetailView.as_view(), name='order_product_detail'),
-    path('order/<int:pk>/answer/', AnswerOnOrderCreateView.as_view(), name='answer_on_order'),
+    path('order/<int:pk>/answer/', create_answer_on_order, name='answer_on_order'),
 
 ]

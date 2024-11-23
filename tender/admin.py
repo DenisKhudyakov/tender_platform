@@ -31,7 +31,7 @@ class OrderProductAdmin(admin.ModelAdmin):
 
 @admin.register(AnswerOnOrder)
 class AnswerOnOrderAdmin(admin.ModelAdmin):
-    list_display = ("order", "supplier", "product", "price", "delivery_time")
+    list_display = ("order_product", "price", "delivery_time")
 
 
 @admin.register(PriceAnalysis)

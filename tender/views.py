@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, get_object_or_404
+from django.forms import formset_factory, modelformset_factory
+from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, FormView
 
@@ -90,38 +91,56 @@ class OrderProductDetailView(DetailView):
         return context
 
 
-class AnswerOnOrderCreateView(CreateView):
-    model = AnswerOnOrder
-    template_name = 'tender/answer_on_order.html'
-    form_class = AnswerOnOrderForm
+def create_answer_on_order(request, pk):  # Изменено order_id на pk
+    # Получаем заявку по переданному ID
+    order = get_object_or_404(OrderProduct, pk=pk).order
 
-    def form_valid(self, form):
+    # Получаем товары, связанные с заявкой
+    order_products = OrderProduct.objects.filter(order=order)
 
-        order_product_id = self.kwargs['pk']
-        order_product = OrderProduct.objects.get(pk=order_product_id)
-        order = order_product.order
-        form.instance.order = order
-        form.instance.supplier = self.request.user  # Поставщик - текущий пользователь
+    # Создаем форму с использованием formset_factory
+    AnswerOnOrderFormSet = modelformset_factory(
+        AnswerOnOrder,
+        fields=('order_product', 'price', 'delivery_time'),
+        extra=len(order_products),
+        can_delete=False
+    )
 
-        print(f"Создается ответ на заказ с ID {order.id}, продукт {form.instance.product.name}")
-        form.save()
-        return redirect(reverse('tender:answer_on_order', args=[self.kwargs['pk']]))
+    if request.method == 'POST':
+        formset = AnswerOnOrderFormSet(request.POST, queryset=AnswerOnOrder.objects.none())
 
-    def get_context_data(self, **kwargs):
-        """
-        Добавляем список продуктов для заявки в контекст.
-        """
-        context = super().get_context_data(**kwargs)
+        if formset.is_valid():
+            # Сохраняем все данные формы
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.supplier = request.user  # Устанавливаем текущего пользователя как поставщика
+                instance.save()
+            return redirect('order_detail', pk=order.id)  # Перенаправление после сохранения
+    else:
+        # Инициализируем форму, подставляя order_product для каждого товара
+        initial_data = [
+            {'order_product': op} for op in order_products
+        ]
+        formset = AnswerOnOrderFormSet(queryset=AnswerOnOrder.objects.none(), initial=initial_data)
 
-        order_product_id = self.kwargs['pk']
-        order_product = OrderProduct.objects.get(pk=order_product_id)
-        order_id = order_product.order.pk
-        order_products = OrderProduct.objects.filter(order=order_id)
+    context = {
+        'formset': formset,
+        'order': order,
+        'order_products': order_products,
+    }
 
-        products = [order_product.product for order_product in order_products]
-        context['products'] = products
+    return render(request, 'tender/answer_on_order.html', context)
 
-        return context
+
+
+
+
+
+
+
+
+
+
 
 
 

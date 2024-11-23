@@ -1,16 +1,30 @@
 {% extends 'tender/base.html' %}
 {% block content %}
-<h3>Продукты, связанные с заявкой:</h3>
-<ul>
-    {% for product in products %}
-        <li>{{ product.name }}</li>
-    {% endfor %}
-</ul>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
-</form>
+    <h1>Ответ на заявку {{ order.id }}</h1>
+
+    <p><strong>Список товаров в заявке:</strong></p>
+    <ul>
+        {% for order_product in order.order_products.all %}
+            <li>{{ order_product.product.name }} ({{ order_product.amounts }})</li>
+        {% endfor %}
+    </ul>
+
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            {{ formset.management_form }}
+            {% for form in formset %}
+                <tr>
+                    <td>{{ form.order_product.label_tag }} {{ form.order_product }}</td>
+                    <td>{{ form.price.label_tag }} {{ form.price }}</td>
+                    <td>{{ form.delivery_time.label_tag }} {{ form.delivery_time }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <button type="submit">Сохранить</button>
+    </form>
+
 
 
 {% endblock %}
