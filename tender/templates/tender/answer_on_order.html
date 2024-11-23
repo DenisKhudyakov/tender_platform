@@ -4,7 +4,7 @@
 
     <p><strong>Список товаров в заявке:</strong></p>
     <ul>
-        {% for order_product in order.order_products.all %}
+        {% for order_product in order_products.all %}
             <li>{{ order_product.product.name }} ({{ order_product.amounts }})</li>
         {% endfor %}
     </ul>
