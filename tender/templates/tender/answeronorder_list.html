@@ -1,0 +1,8 @@
+{% extends 'tender/base.html' %}
+{% block content %}
+    {% for answer in answers %}
+        {{ answer.suppliers }}
+        {{ answer }}
+        <br>
+    {% endfor %}
+{% endblock %}

@@ -58,7 +58,7 @@ class OrderProduct(models.Model):
     )
 
     def __str__(self):
-        return f"{self.product.article} - {self.product.name}: {self.amounts}"
+        return f"{self.order}, товар: {self.product.article} - {self.product.name}: {self.amounts}"
 
     class Meta:
         verbose_name = "Товар в заявке"

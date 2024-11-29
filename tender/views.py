@@ -1,11 +1,15 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import formset_factory
+from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, CreateView, FormView
+from django.views import View
+from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 
-from tender.forms import ProductForm, OrderForm, OrderProductForm, AnswerOnOrderForm
-from tender.models import OrderProduct, Order, Product, AnswerOnOrder
+from tender.forms import ProductForm, OrderForm, OrderProductForm, AnswerOnOrderForm, PriceAnalysisForm, \
+    AnswerOnOrderFormSet
+from tender.models import OrderProduct, Order, Product, AnswerOnOrder, PriceAnalysis
 
 
 class OrderListView(ListView):
@@ -120,6 +124,42 @@ def create_answer_on_order(request, pk):
     }
 
     return render(request, 'tender/answer_on_order.html', context)
+
+
+def update_answer_on_order(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+
+    answer = AnswerOnOrder.objects.filter(order_product__order=order, supplier=request.user)
+
+    if not answer.exists():
+        return render(request, 'tender/no_answers.html', {'order': order})
+
+    if request.method == 'POST':
+        formset = AnswerOnOrderFormSet(request.POST, queryset=answer)
+        if formset.is_valid():
+            formset.save()
+            return render(request, "tender/update_answers_success.html", {"order": order})
+        else:
+            print(formset.errors)
+    else:
+        formset = AnswerOnOrderFormSet(queryset=answer)
+    return render(request, "tender/update_answers.html", {"order": order, "formset": formset})
+
+
+class AnswerOnOrderListView(LoginRequiredMixin, ListView):
+    """
+    Контроллер анализа цен, выводим все ответы на заявку по номеру заявку
+    """
+    model = AnswerOnOrder
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        pk = self.kwargs['pk']
+        answers = AnswerOnOrder.objects.filter(order_product__order__id=pk)
+        context['answers'] = answers
+        return context
+
+
 
 
 

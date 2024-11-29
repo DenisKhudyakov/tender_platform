@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import modelformset_factory
 
-from .models import Product, Order, OrderProduct, AnswerOnOrder
+from .models import Product, Order, OrderProduct, AnswerOnOrder, PriceAnalysis
 
 
 class ProductForm(forms.ModelForm):
@@ -27,10 +27,21 @@ class AnswerOnOrderForm(forms.ModelForm):
         model = AnswerOnOrder
         fields = ['order_product', 'price', 'delivery_time']
         widgets = {
+            'id': forms.HiddenInput(),
             'price': forms.TextInput(attrs={'class': 'form-control'}),
             'delivery_time': forms.TextInput(attrs={'class': 'form-control'}),
             'order_product': forms.HiddenInput()
         }
 
 
+AnswerOnOrderFormSet = modelformset_factory(
+    AnswerOnOrder,
+    form=AnswerOnOrderForm,
+    extra=0,
+)
 
+
+class PriceAnalysisForm(forms.ModelForm):
+    class Meta:
+        model = PriceAnalysis
+        fields = ['order', 'answer']

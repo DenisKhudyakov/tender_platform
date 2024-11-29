@@ -1,0 +1,37 @@
+{% extends 'tender/base.html' %}
+{% block content %}
+
+<h1>Update Answers for Order #{{ order.id }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <table>
+            <thead>
+                <tr>
+                    <th>Supplier</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Delivery Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+                <tr>
+                    <td>{{ form.instance.supplier }}</td>
+                    <td>
+                        <strong>{{ form.instance.order_product.product.name }}</strong><br>
+                        Артикул: {{ form.instance.order_product.product.article }}<br>
+                        Количество: {{ form.instance.order_product.amounts }}
+                        {{ form.order_product }}
+                        {{ form.id }}
+                    </td>
+                    <td>{{ form.price }}</td>
+                    <td>{{ form.delivery_time }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit">Save Changes</button>
+    </form>
+
+{% endblock %}
