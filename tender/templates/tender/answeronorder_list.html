@@ -1,8 +1,15 @@
 {% extends 'tender/base.html' %}
 {% block content %}
+    все поставщики
+    {% for supplier in suppliers %}
+        {{ supplier }}
+    {% endfor %}
+    <br>
     {% for answer in answers %}
-        {{ answer.suppliers }}
         {{ answer }}
-        <br>
+        {{ answer.order_product }}
+        {{ answer.price }} - {{ answer.delivery_time }}
+         <br>
     {% endfor %}
 {% endblock %}
+

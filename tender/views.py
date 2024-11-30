@@ -10,6 +10,7 @@ from django.views.generic import ListView, DetailView, CreateView, FormView, Upd
 from tender.forms import ProductForm, OrderForm, OrderProductForm, AnswerOnOrderForm, PriceAnalysisForm, \
     AnswerOnOrderFormSet
 from tender.models import OrderProduct, Order, Product, AnswerOnOrder, PriceAnalysis
+from users.models import User
 
 
 class OrderListView(ListView):
@@ -152,12 +153,20 @@ class AnswerOnOrderListView(LoginRequiredMixin, ListView):
     """
     model = AnswerOnOrder
 
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return AnswerOnOrder.objects.filter(order_product__order__id=pk)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        pk = self.kwargs['pk']
-        answers = AnswerOnOrder.objects.filter(order_product__order__id=pk)
+        answers = self.get_queryset()
         context['answers'] = answers
+        suppliers_id = answers.values_list('supplier', flat=True).distinct()
+        suppliers = User.objects.filter(id__in=suppliers_id)
+        context['suppliers'] = suppliers
         return context
+
+
 
 
 
