@@ -1,8 +1,13 @@
 from django.contrib.auth.views import LoginView
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 from users.forms import LoginForm, SignUpForm
+
+
+def main(request):
+    return render(request, 'users/main.html')
 
 
 class UserLogin(LoginView):
