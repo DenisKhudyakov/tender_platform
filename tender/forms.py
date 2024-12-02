@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, formset_factory
 
 from .models import Product, Order, OrderProduct, AnswerOnOrder, PriceAnalysis
 
@@ -14,6 +14,7 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = []
+        help_texts = "Создайте заявку, чтобы в дальнейшем добавить в неё товары"
 
 
 class OrderProductForm(forms.ModelForm):
@@ -38,6 +39,12 @@ AnswerOnOrderFormSet = modelformset_factory(
     AnswerOnOrder,
     form=AnswerOnOrderForm,
     extra=0,
+)
+
+ProductFormSet = modelformset_factory(
+    Product,
+    form=ProductForm,
+    extra=10
 )
 
 

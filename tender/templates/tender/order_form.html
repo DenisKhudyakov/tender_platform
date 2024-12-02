@@ -1,0 +1,49 @@
+{% extends 'tender/base.html' %}
+{% block content %}
+<main class="container my-5">
+    <h2 class="mb-4 text-center">Создание заявки</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                <p class="text-muted mb-4">Создайте заявку, чтобы в дальнейшем добавить в неё товары</p>
+                    <form method="post" action="{% url 'tender:order_create' %}">
+                        {% csrf_token %}
+                        <!-- Отображение ошибок формы -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <!-- Поля формы -->
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="text-danger">
+                                        {{ field.errors }}
+                                    </div>
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">
+                                        {{ field.help_text }}
+                                    </small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <!-- Кнопка -->
+                        <button type="submit" class="btn btn-success w-100">Создать заявку</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+{% endblock %}

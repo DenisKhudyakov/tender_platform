@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import IntegrityError
 from django.forms import formset_factory
 from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404, render
@@ -8,14 +9,13 @@ from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 
 from tender.forms import ProductForm, OrderForm, OrderProductForm, AnswerOnOrderForm, PriceAnalysisForm, \
-    AnswerOnOrderFormSet
+    AnswerOnOrderFormSet, ProductFormSet
 from tender.models import OrderProduct, Order, Product, AnswerOnOrder, PriceAnalysis
 from users.models import User
 
 
 class OrderListView(ListView):
     model = Order
-    template_name = "tender/order_list.html"
     context_object_name = 'orders'
 
 
@@ -33,14 +33,18 @@ class OrderDetailView(DetailView):
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
-    success_url = reverse_lazy('tender:order_list')
+    success_url = reverse_lazy('tender:questions')
+
+
+def questions_for_products(request):
+    return render(request, template_name='tender/questions_for_product.html')
 
 
 class OrderCreateView(CreateView):
     model = Order
     form_class = OrderForm
-    context_object_name = 'order'
-    template_name = 'tender/order_list.html'
+    context_object_name = 'orders'
+    template_name = 'tender/order_form.html'
 
     def form_valid(self, form):
         order = form.save()

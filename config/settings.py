@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
 from dotenv import find_dotenv, load_dotenv
 
 if not find_dotenv():
@@ -146,7 +147,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
-LOGIN_REDIRECT_URL = "/"  # URL to redirect to after login
-LOGOUT_REDIRECT_URL = "/"  # URL to redirect to after logout
+LOGIN_REDIRECT_URL = "tender:order_products"  # URL to redirect to after login
+LOGOUT_REDIRECT_URL = reverse_lazy("users:main")  # URL to redirect to after logout
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"

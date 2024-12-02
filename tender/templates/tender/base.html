@@ -17,12 +17,15 @@
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
           <div class="offcanvas-body">
             <ul class="navbar-nav flex-grow-1 justify-content-end">
-              <li class="nav-item"><a class="nav-link" href="#">Tour</a></li>
-              <li class="nav-item"><a class="nav-link" href="#">Product</a></li>
-              <li class="nav-item"><a class="nav-link" href="#">Features</a></li>
-              <li class="nav-item"><a class="nav-link" href="#">Создать заявку</a></li>
-              <li class="nav-item"><a class="nav-link" href="#">Просмотр заявок</a></li>
-              <li class="nav-item"><a class="nav-link" href="#">Выход</a></li>
+                {% if user.is_employer %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'tender:order_create' %}">Создать заявку</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'tender:create_product' %}">Создать товар</a></li>
+                {% endif %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'users:main' %}">Главная страница</a></li>
+                <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <li class="nav-item"><button type="submit" class="nav-link">Выход</button></li>
+                </form>
             </ul>
           </div>
         </div>

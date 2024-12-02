@@ -17,8 +17,11 @@
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
           <div class="offcanvas-body">
             <ul class="navbar-nav flex-grow-1 justify-content-end">
-              <li class="nav-item"><a class="nav-link" href="#">Регистрация</a></li>
-              <li class="nav-item"><a class="nav-link" href="#">Вход</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'tender:order_products' %}">Просмотр заявок</a></li>
+                {% endif %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'users:register' %}">Регистрация</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'users:login' %}">Вход</a></li>
             </ul>
           </div>
         </div>
@@ -26,14 +29,50 @@
     </nav>
     <main>
           <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-body-tertiary">
-            <div class="col-md-6 p-lg-5 mx-auto my-5">
-              <h1 class="display-3 fw-bold">Designed for engineers</h1>
-              <h3 class="fw-normal text-muted mb-3">Build anything you want with Aperture</h3>
+            <div class="col-md-8 p-lg-5 mx-auto my-10">
+              <h1 class="display-3 fw-bold">Торговая площадка компании ООО "ЧЗМЭК"</h1>
+              <h3 class="fw-normal text-muted mb-3">Сервис для снабженцев и поставщиков</h3>
             </div>
             <div class="product-device shadow-sm d-none d-md-block"></div>
             <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
           </div>
     </main>
+    <footer class="bg-dark text-white py-4">
+  <div class="container">
+    <div class="row">
+      <!-- О компании -->
+      <div class="col-md-4">
+        <h5>О компании</h5>
+        <p>ООО "ЧЗМЭК" — надежный партнер. Мы стремимся к долгосрочному сотрудничеству.</p>
+      </div>
+
+      <!-- Контакты -->
+      <div class="col-md-4">
+        <h5>Контакты</h5>
+        <ul class="list-unstyled">
+          <li><i class="bi bi-telephone-fill"></i> Телефон: +7 (351) 729-91-06</li>
+          <li><i class="bi bi-envelope-fill"></i> Email: snab1@chzmek.ru</li>
+          <li><i class="bi bi-geo-alt-fill"></i> Адрес: г. Челябинск, ул. Хлебозаводская, д. 5, оф. 32</li>
+        </ul>
+      </div>
+
+      <!-- Полезные ссылки -->
+      <div class="col-md-4">
+        <h5>Полезные ссылки</h5>
+        <ul class="list-unstyled">
+          <li><a href="https://chzmek.ru/" class="text-white text-decoration-none">Главная</a></li>
+          <li><a href="https://chzmek.ru/company/index.php" class="text-white text-decoration-none">О нас</a></li>
+          <li><a href="https://chzmek.ru/contacts/" class="text-white text-decoration-none">Контакты</a></li>
+          <li><a href="https://chzmek.ru/news/politika-v-otnoshenii-obrabotki-personalnykh-dannykh.php" class="text-white text-decoration-none">Политика конфиденциальности</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <p class="mb-0">&copy; 2024 ООО "ЧЗМЭК". Все права защищены.</p>
+    </div>
+  </div>
+</footer>
+
     <script src="{% static "js/bootstrap.bundle.js" %}"></script>
 </body>
 </html>

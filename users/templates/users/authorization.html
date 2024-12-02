@@ -16,7 +16,7 @@
       <header class="mb-auto">
         <div>
           <nav class="nav nav-masthead justify-content-center float-md-end">
-            <a class="nav-link fw-bold py-1 px-1 active" aria-current="page" href="#">Home</a>
+            <a class="nav-link fw-bold py-1 px-1 active" aria-current="page" href="{% url 'users:main' %}">Home</a>
             <a class="nav-link fw-bold py-1 px-1" href="{% url 'users:register' %}"> Регистрация</a>
             <a class="nav-link fw-bold py-1 px-1" href="{% url 'users:login' %}"> Авторизация</a>
           </nav>
@@ -24,7 +24,7 @@
       </header>
 
     <main class="form-signin w-100 m-auto d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-        <form>
+        <form method="post">
             <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите в систему</h1>
 
             <div class="form-floating">
@@ -40,7 +40,7 @@
 {#              </label>#}
 {#            </div>#}
             <button class="btn btn-primary w-100 py-2" type="submit">Вход</button>
-            <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2024</p>
+            <p class="mt-5 mb-3 text-body-secondary">&copy;2024</p>
           </form>
     </main>
     <script src="{% static "js/bootstrap.bundle.js" %}"></script>

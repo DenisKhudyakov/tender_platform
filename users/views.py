@@ -20,6 +20,10 @@ class UserCreate(CreateView):
     form_class = SignUpForm
     success_url = reverse_lazy("users:login")
 
+    def form_valid(self, form):
+        user = form.save()
+        return super().form_valid(form)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Регистрация на сайте"

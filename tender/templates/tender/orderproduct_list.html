@@ -1,7 +1,26 @@
 {% extends 'tender/base.html' %}
 {% block content %}
-    <h3>Заявки для поставщиков</h3>
-    {% for order_product in order_products %}
-        <a href="{% url 'tender:order_product_detail' pk=order_product.id %}">{{ order_product.order }}</a><br>
-    {% endfor %}
+<main class="container my-5">
+    <h3 class="mb-4">Заявки для поставщиков</h3>
+    <div class="list-group">
+        {% for order_product in order_products %}
+            <a
+                href="{% url 'tender:order_product_detail' pk=order_product.id %}"
+                class="list-group-item list-group-item-action"
+            >
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ order_product.order }}</h5>
+                    <small>{{ order_product.created_at|date:"d.m.Y" }}</small>
+                </div>
+                <p class="mb-1 text-muted">{{ order_product.description|truncatechars:100 }}</p>
+                <small class="text-success">Подробнее</small>
+            </a>
+        {% empty %}
+            <div class="alert alert-warning" role="alert">
+                Заявки отсутствуют.
+            </div>
+        {% endfor %}
+    </div>
+</main>
+
 {% endblock %}

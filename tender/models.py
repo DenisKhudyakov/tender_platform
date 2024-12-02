@@ -9,10 +9,10 @@ class Product(models.Model):
     """
 
     name = models.CharField(
-        max_length=255, verbose_name="Товар", help_text="Название товара"
+        max_length=255, verbose_name="Товар", help_text="Название товара, обязательное поле"
     )
     article = models.CharField(
-        max_length=255, verbose_name="Артикул", help_text="Артикул товара", **NULLABLE
+        max_length=255, verbose_name="Артикул", help_text="Артикул товара, должен быть уникальным", unique=True, **NULLABLE
     )
     measurement = models.CharField(max_length=10, verbose_name='Единица измерения', **NULLABLE)
 

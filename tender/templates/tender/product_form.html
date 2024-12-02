@@ -1,8 +1,24 @@
 {% extends 'tender/base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-success">Создать товар</button>
-    </form>
+<main class="container my-5">
+    <h2 class="mb-4 text-center">Создание товара</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form method="post">
+                        <div class="form-floating mb-3">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Создать товар</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
 {% endblock %}
