@@ -1,17 +1,19 @@
 {% extends 'tender/base.html' %}
 {% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">Обновите ответ на Заявку №{{ order.id }}</h1>
 
-<h1>Update Answers for Order #{{ order.id }}</h1>
     <form method="post">
         {% csrf_token %}
         {{ formset.management_form }}
-        <table>
-            <thead>
+
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
                 <tr>
-                    <th>Supplier</th>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Delivery Time</th>
+                    <th>Поставщик</th>
+                    <th>Продукт</th>
+                    <th>Цена</th>
+                    <th>Срок поставки</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,13 +27,19 @@
                         {{ form.order_product }}
                         {{ form.id }}
                     </td>
-                    <td>{{ form.price }}</td>
-                    <td>{{ form.delivery_time }}</td>
+                    <td>
+                        {{ form.price }}
+                    </td>
+                    <td>
+                        {{ form.delivery_time }}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <button type="submit">Save Changes</button>
-    </form>
 
+        <button type="submit" class="btn btn-primary mt-3">Сохранить изменения</button>
+    </form>
+    <a href="{% url 'tender:order_product_detail' pk=order.id %}">Назад</a>
+</div>
 {% endblock %}

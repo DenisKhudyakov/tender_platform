@@ -1,0 +1,16 @@
+{% extends 'tender/base.html' %}
+{% block content %}
+    <main class="container my-5">
+        <h3 class="mb-4">Список заявок, в который необходимо добавлять товары</h3>
+
+        <div class="list-group">
+        {% for order in orders %}
+            <a class="list-group-item list-group-item-action" href="{% url 'tender:order_detail' pk=order.pk %}">
+                Заявка номер: {{ order.id }}</a>
+            <br>
+        {% endfor %}
+        </div>
+    </main>
+
+
+{% endblock %}

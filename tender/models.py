@@ -79,11 +79,11 @@ class AnswerOnOrder(models.Model):
     order_product = models.ForeignKey(
         OrderProduct, related_name='order_product', on_delete=models.CASCADE, verbose_name='Заявка',
     )
-    price = models.CharField(
-        max_length=255, verbose_name="Цена", help_text="Стоимость товара", default=0
+    price = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name="Цена", help_text="Стоимость товара, в рублях", default=0
     )
     delivery_time = models.CharField(
-        max_length=255, verbose_name="Срок поставки", help_text="Срок поставки", default=None
+        max_length=255, verbose_name="Срок поставки", help_text="Срок поставки", default=0
     )
 
     def __str__(self):

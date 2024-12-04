@@ -1,11 +1,44 @@
 {% extends 'tender/base.html' %}
 {% block content %}
-    <h2>Заявка создана {{ order.id }}</h2>
-    <a href="{% url 'tender:product_list' pk=order.id %}">Чтобы добавить товары в заказ перейдите по ссылке</a>
-    <br>
-    <br>
-    <h3>Товары в заявке, без количества, нужно переделать get_context</h3>
-    {% for product in products %}
-        Артикул: {{ product.article }}, Наименование: {{ product.name }}, Единица измерения: {{ product.measurement }}<br>
-    {% endfor %}
+<div class="container my-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Заявка №{{ order.id }}</h2>
+        </div>
+        <div class="card-body">
+            <p>
+                <a href="{% url 'tender:product_list' pk=order.id %}" class="btn btn-success">
+                    Добавить товары в заказ
+                </a>
+            </p>
+
+            <h3 class="mt-4">Товары в заявке</h3>
+            {% if products %}
+                <table class="table table-bordered mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Артикул</th>
+                            <th>Наименование</th>
+                            <th>Единица измерения</th>
+                            <th>Количество</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                            <tr>
+                                <td>{{ product.product.article }}</td>
+                                <td>{{ product.product.name }}</td>
+                                <td>{{ product.product.measurement }}</td>
+                                <td>{{ product.amounts }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-muted">Товары в заявке отсутствуют.</p>
+            {% endif %}
+            <a class="btn btn-danger" href="{% url 'tender:price_analys' pk=order.id %}">Анализ цен</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

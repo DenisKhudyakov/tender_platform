@@ -6,8 +6,8 @@
     <title>No Answers Found</title>
 </head>
 <body>
-    <h1>No Answers Found</h1>
+    <h1>Ответов на заявку не найдено</h1>
     <p>You don't have any answers for order #{{ order.id }}.</p>
-    <a href="/">Return to home</a>
+    <a href="{% url 'tender:order_products' %}">Вернуться к списку заявок</a>
 </body>
 </html>

@@ -20,8 +20,10 @@
                 {% if user.is_employer %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'tender:order_create' %}">Создать заявку</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'tender:create_product' %}">Создать товар</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'tender:order_list' %}">Заявки для снабженцев</a></li>
                 {% endif %}
               <li class="nav-item"><a class="nav-link" href="{% url 'users:main' %}">Главная страница</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'tender:order_products' %}">Просмотр заявок</a></li>
                 <form method="post" action="{% url 'users:logout' %}">
                     {% csrf_token %}
                     <li class="nav-item"><button type="submit" class="nav-link">Выход</button></li>

@@ -1,0 +1,63 @@
+{% extends 'tender/base.html' %}
+{% block content %}
+<div class="container my-4">
+    <h2 class="mb-4">Анализ цен для заявки номер</h2>
+
+    <!-- Таблица с ответами на заявку -->
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Поставщик</th>
+                <th>Продукт</th>
+                <th>Цена</th>
+                <th>Время доставки</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for answer in order_answers %}
+            <tr data-price="{{ answer.price }}">
+                <td>{{ answer.supplier }}</td>
+                <td>{{ answer.order_product.product.name }}</td>
+                <td class="price">{{ answer.price }}</td>
+                <td>{{ answer.delivery_time }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">Нет ответов на заявку</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    <script>
+                document.addEventListener('DOMContentLoaded', function() {
+          const table = document.querySelector('.table');
+          const rows = table.querySelectorAll('tbody tr');
+
+          // Создаем словарь для хранения минимальных цен для каждого продукта
+          const minPrices = {};
+
+          rows.forEach(row => {
+            const supplier = row.querySelector('td:nth-child(1)').textContent;
+            const product = row.querySelector('td:nth-child(2)').textContent;
+            const price = parseFloat(row.querySelector('td:nth-child(3)').textContent);
+            const priceCell = row.querySelector('td.price');
+
+            // Генерируем ключ для словаря, который объединяет продукт и поставщика
+            const key = `${product}-${supplier}`;
+
+            // Если ключ не существует, или текущая цена меньше существующей минимальной цены, обновляем минимальную цену
+            if (!minPrices[product] || price < minPrices[product].price) {
+              minPrices[product] = { price: price, row: row };
+            }
+          });
+
+          // Проходим по каждому товару и подсвечиваем ячейку с минимальной ценой
+          for (const product in minPrices) {
+            const row = minPrices[product].row;
+            row.querySelector('td.price').style.backgroundColor = 'lightgreen';
+          }
+        });
+    </script>
+
+{% endblock %}

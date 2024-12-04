@@ -1,28 +1,37 @@
 {% extends 'tender/base.html' %}
 {% load my_tags %}
 {% block content %}
-    <h2>Товары в заявке номер {{ order.id }}</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ formset.management_form }}  <!-- Скрытая форма управления для formset -->
-    {% for form, product in formset.forms|zip_lists:order_products %}
-        <div class="form-row">
-            <label>Продукт: {{ product }}</label>  <!-- Здесь выводим название продукта -->
-            {{ form.order_product }}  <!-- Это скрытое поле, если необходимо -->
+<div class="container my-4">
+    <h2 class="mb-4">Товары в заявке номер {{ order.id }}</h2>
 
-            <div>
-                {{ form.price.label }} {{ form.price }}  <!-- Поле цены -->
-            </div>
-            <div>
-                {{ form.delivery_time.label }} {{ form.delivery_time }}  <!-- Поле времени доставки -->
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}  <!-- Скрытая форма управления для formset -->
+
+        {% for form, product in formset.forms|zip_lists:order_products %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Продукт: {{ product }}</h5>  <!-- Здесь выводим название продукта -->
+                {{ form.order_product }}  <!-- Это скрытое поле, если необходимо -->
+
+                <div class="mb-3">
+                    <label for="{{ form.price.id_for_label }}" class="form-label">{{ form.price.label }}</label>
+                    <div class="input-group">
+                        {{ form.price }}  <!-- Поле цены -->
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.delivery_time.id_for_label }}" class="form-label">{{ form.delivery_time.label }}</label>
+                    {{ form.delivery_time }}  <!-- Поле времени доставки -->
+                </div>
             </div>
         </div>
-    {% endfor %}
-    <button type="submit">Отправить</button>
-</form>
+        {% endfor %}
 
-
-
-
-
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Отправить</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

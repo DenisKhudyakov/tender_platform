@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.forms import formset_factory
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.views import View
@@ -26,7 +26,8 @@ class OrderDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['products'] = self.object.product.all()
+        order = self.object.pk
+        context['products'] = OrderProduct.objects.filter(order=order)
         return context
 
 
@@ -97,6 +98,7 @@ class OrderProductDetailView(DetailView):
         context = super().get_context_data()
         order = self.object.order
         context['products'] = OrderProduct.objects.filter(order=order)
+        context['has_answer'] = AnswerOnOrder.objects.filter(order_product__order=order, supplier=self.request.user).exists()
         return context
 
 
@@ -115,9 +117,12 @@ def create_answer_on_order(request, pk):
 
         if formset.is_valid():
             for form in formset.forms:
-                form.supplier = request.user  # Устанавливаем текущего пользователя как поставщика
-                form.save()
-            return redirect('tender:order_list')  # Перенаправление после сохранения
+                answer = form.save(commit=False)
+                print(f'пользователь {request.user}')
+                answer.supplier = request.user  # Устанавливаем текущего пользователя как поставщика
+                print(f'Поставщик загружен {answer.supplier}')
+                answer.save()
+            return redirect('tender:order_products')  # Перенаправление после сохранения
     else:
 
         initial_data = [{'order_product': product} for product in order_products]
@@ -153,21 +158,22 @@ def update_answer_on_order(request, pk):
 
 class AnswerOnOrderListView(LoginRequiredMixin, ListView):
     """
-    Контроллер анализа цен, выводим все ответы на заявку по номеру заявку
+    Контроллер анализа цен, выводим все ответы на заявку по номеру заявки
     """
     model = AnswerOnOrder
+    template_name = 'tender/price_analysis.html'
 
     def get_queryset(self):
         pk = self.kwargs['pk']
-        return AnswerOnOrder.objects.filter(order_product__order__id=pk)
+        try:
+            order = Order.objects.get(pk=pk)
+            return AnswerOnOrder.objects.filter(order_product__order=order).select_related('supplier')
+        except Order.DoesNotExist:
+            raise Http404("Заказ не найден")
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        answers = self.get_queryset()
-        context['answers'] = answers
-        suppliers_id = answers.values_list('supplier', flat=True).distinct()
-        suppliers = User.objects.filter(id__in=suppliers_id)
-        context['suppliers'] = suppliers
+        context = super().get_context_data(**kwargs) # важно передать **kwargs
+        context['order_answers'] = self.get_queryset() # более описательное имя
         return context
 
 

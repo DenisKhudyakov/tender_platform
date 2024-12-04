@@ -6,7 +6,7 @@
     <title>Update Successful</title>
 </head>
 <body>
-    <h1>Answers for Order #{{ order.id }} were successfully updated!</h1>
-    <a href="/update-answers/{{ order.id }}/">Go back</a>
+    <h1>Ответ на Заявку №{{ order.id }} был успешно обновлен!</h1>
+    <a href="{% url 'tender:order_products' %}">Вернутся к списку заявок/a>
 </body>
 </html>

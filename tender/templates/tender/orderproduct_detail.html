@@ -1,25 +1,41 @@
 {% extends 'tender/base.html' %}
 {% block content %}
-    <h3>Заявка номер {{ object.order.id }}</h3>
-    <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
-        <thead>
-            <tr style="background-color: #f2f2f2;">
-                <th style="border: 1px solid black; padding: 8px; text-align: left;">Артикул</th>
-                <th style="border: 1px solid black; padding: 8px; text-align: left;">Наименование товара</th>
-                <th style="border: 1px solid black; padding: 8px; text-align: left;">Ед. измерения</th>
-                <th style="border: 1px solid black; padding: 8px; text-align: left;">Количество</th>
+<div class="container my-4">
+    <h3 class="mb-4">Заявка номер {{ object.order.id }}</h3>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Артикул</th>
+                <th>Наименование товара</th>
+                <th>Ед. измерения</th>
+                <th>Количество</th>
             </tr>
         </thead>
         <tbody>
         {% for item in products %}
             <tr>
-                <td style="border: 1px solid black; padding: 8px;">{{ item.product.article }}</td>
-                <td style="border: 1px solid black; padding: 8px;">{{ item.product.name }}</td>
-                <td style="border: 1px solid black; padding: 8px;">{{ item.product.measurement }}</td>
-                <td style="border: 1px solid black; padding: 8px;">{{ item.amounts }}</td>
+                <td>{{ item.product.article }}</td>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.product.measurement }}</td>
+                <td>{{ item.amounts }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'tender:answer_on_order' object.id %}">Для того чтобы оставить ответ, перейдите по ссылке</a>
+
+    <div class="mt-4">
+        {% if has_answer %}
+        <!-- Если ответ на заявку уже существует, показываем только кнопку для обновления -->
+        <a href="{% url 'tender:update_answers' pk=object.order.id %}" class="btn btn-secondary">
+            Обновить ответ на заявку
+        </a>
+    {% else %}
+        <!-- Если ответа нет, показываем кнопку для перехода к ответу -->
+        <a href="{% url 'tender:answer_on_order' pk=object.id %}" class="btn btn-primary">
+            Перейти для ответа на заявку
+        </a>
+    {% endif %}
+    </div>
+</div>
 {% endblock %}
