@@ -8,6 +8,16 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CHZMEK TENDER</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        .logo {
+            width: 25px;
+            height: 25px;
+        }
+        .logo_link {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-md bg-dark sticky-top border-bottom py-4" data-bs-theme="dark">
@@ -74,6 +84,9 @@
     </div>
     <div class="text-center mt-4">
       <p class="mb-0">&copy; 2024 ООО "ЧЗМЭК". Все права защищены.</p>
+        <a class="logo_link" href="https://t.me/adv_mf0"><p>Developed by
+            <img class="logo" src="{% static 'images/img361484481.jpg' %}" alt="LOGO">
+        </p></a>
     </div>
   </div>
 </footer>
