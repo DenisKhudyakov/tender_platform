@@ -3,6 +3,17 @@
 <div class="container my-4">
     <h2 class="mb-4">Анализ цен для заявки номер</h2>
 
+    <div class="mb-4 p-3 border rounded bg-light">
+    <!-- Выпадающий список для фильтрации -->
+        <label for="productFilter" class="form-label fw-bold">Фильтр по продукту:</label>
+        <select id="productFilter" class="form-select">
+            <option value="">Все продукты</option>
+            {% for answer in order_answers %}
+                <option value="{{ answer.order_product.product.name }}">{{ answer.order_product.product.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
     <!-- Таблица с ответами на заявку -->
     <table class="table table-bordered table-striped">
         <thead>
@@ -13,9 +24,9 @@
                 <th>Время доставки</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="dataTable">
             {% for answer in order_answers %}
-            <tr data-price="{{ answer.price }}">
+            <tr data-product="{{ answer.order_product.product.name }}">
                 <td>{{ answer.supplier }}</td>
                 <td>{{ answer.order_product.product.name }}</td>
                 <td class="price">{{ answer.price }}</td>
@@ -58,6 +69,20 @@
             row.querySelector('td.price').style.backgroundColor = 'lightgreen';
           }
         });
+        document.getElementById("productFilter").addEventListener("change", function() {
+        const selectedProduct = this.value.toLowerCase();
+        const rows = document.querySelectorAll("#dataTable tr");
+
+        rows.forEach(row => {
+            const product = row.getAttribute("data-product").toLowerCase();
+            if (selectedProduct === "" || product === selectedProduct) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+
     </script>
 
 {% endblock %}
