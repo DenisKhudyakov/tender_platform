@@ -17,19 +17,19 @@ class User(AbstractUser):
         max_length=255,
         **NULLABLE,
         verbose_name="Название компании",
-        help_text="Введите название организации"
+        help_text="Введите название организации",
     )
     phone = models.CharField(
         max_length=20,
         **NULLABLE,
         verbose_name="Телефонный номер",
-        help_text="Введите номер телефона"
+        help_text="Введите номер телефона",
     )
     inn = models.CharField(
         max_length=12,
         **NULLABLE,
         verbose_name="ИНН",
-        help_text="Введите ИНН организации"
+        help_text="Введите ИНН организации",
     )
     is_employer = models.BooleanField(
         default=False,
@@ -45,4 +45,7 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
 
     def __str__(self):
-        return f'{self.email}'
+        return f"Почта: {self.email}, " \
+                f"Компания: {self.company_name if self.company_name else 'Не указана'}, " \
+                f"Телефон: {self.phone if self.phone else 'Не указан'}"
+

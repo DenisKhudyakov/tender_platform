@@ -9,6 +9,7 @@ class TestAPIView(APIView):
     """
     Тестовый запрос, для проверки работоспособности
     """
+
     def get(self, request):
         return Response({"message": "Hello World"})
 
@@ -26,6 +27,7 @@ class CreateOrderWithProductsView(APIView):
     "amounts": [10.5, 3.2]
     }
     """
+
     def post(self, request, *args, **kwargs):
         serializer = OrderProductCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -33,6 +35,5 @@ class CreateOrderWithProductsView(APIView):
 
         return Response(
             {"order_id": order.id, "message": "Заявка для поставщиков успешно создана"},
-            status=status.HTTP_201_CREATED
+            status=status.HTTP_201_CREATED,
         )
-

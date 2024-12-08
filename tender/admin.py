@@ -6,12 +6,7 @@ from tender.models import (AnswerOnOrder, Order, OrderProduct, PriceAnalysis,
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "name",
-        "article",
-        "measurement"
-    )
+    list_display = ("id", "name", "article", "measurement")
 
 
 @admin.register(Order)

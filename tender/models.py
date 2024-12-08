@@ -9,12 +9,19 @@ class Product(models.Model):
     """
 
     name = models.CharField(
-        max_length=255, verbose_name="Товар", help_text="Название товара, обязательное поле"
+        max_length=255,
+        verbose_name="Товар",
+        help_text="Название товара, обязательное поле",
     )
     article = models.CharField(
-        max_length=255, verbose_name="Артикул", help_text="Артикул товара, должен быть уникальным", **NULLABLE
+        max_length=255,
+        verbose_name="Артикул",
+        help_text="Артикул товара, должен быть уникальным",
+        **NULLABLE,
     )
-    measurement = models.CharField(max_length=10, verbose_name='Единица измерения', **NULLABLE)
+    measurement = models.CharField(
+        max_length=10, verbose_name="Единица измерения", **NULLABLE
+    )
 
     def __str__(self):
         return self.name
@@ -49,16 +56,28 @@ class OrderProduct(models.Model):
     Смежная таблица заявок и продуктов
     """
 
-    order = models.ForeignKey(Order, related_name="orders", on_delete=models.CASCADE, verbose_name='Заявка')
+    order = models.ForeignKey(
+        Order, related_name="orders", on_delete=models.CASCADE, verbose_name="Заявка"
+    )
     product = models.ForeignKey(
-        Product, related_name="products", on_delete=models.CASCADE, verbose_name='Продукты'
+        Product,
+        related_name="products",
+        on_delete=models.CASCADE,
+        verbose_name="Продукты",
     )
     amounts = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name="Количество", help_text="Количество товара в заявке", **NULLABLE
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Количество",
+        help_text="Количество товара в заявке",
+        **NULLABLE,
     )
 
     def __str__(self):
-        return f"{self.order}, товар: {self.product.article} - {self.product.name}: {self.amounts}"
+        return (f""
+                f"{self.order}, Артикул: {self.product.article}, Наименование: {self.product.name}, "
+                f"Количество: {self.amounts} {self.product.measurement}"
+        )
 
     class Meta:
         verbose_name = "Товар в заявке"
@@ -69,6 +88,7 @@ class AnswerOnOrder(models.Model):
     """
     Модель ответов на заявку.
     """
+
     supplier = models.ForeignKey(
         User,
         related_name="suppliers",
@@ -77,13 +97,23 @@ class AnswerOnOrder(models.Model):
         null=True,
     )
     order_product = models.ForeignKey(
-        OrderProduct, related_name='order_product', on_delete=models.CASCADE, verbose_name='Заявка',
+        OrderProduct,
+        related_name="order_product",
+        on_delete=models.CASCADE,
+        verbose_name="Заявка",
     )
     price = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name="Цена", help_text="Стоимость товара, в рублях", default=0
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Цена",
+        help_text="Стоимость товара, в рублях",
+        default=0,
     )
     delivery_time = models.CharField(
-        max_length=255, verbose_name="Срок поставки", help_text="Срок поставки", default=0
+        max_length=255,
+        verbose_name="Срок поставки",
+        help_text="Срок поставки",
+        default=0,
     )
 
     def __str__(self):

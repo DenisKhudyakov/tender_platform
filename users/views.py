@@ -7,7 +7,7 @@ from users.forms import LoginForm, SignUpForm
 
 
 def main(request):
-    return render(request, 'users/main.html')
+    return render(request, "users/main.html")
 
 
 class UserLogin(LoginView):

@@ -8,8 +8,8 @@
         <label for="productFilter" class="form-label fw-bold">Фильтр по продукту:</label>
         <select id="productFilter" class="form-select">
             <option value="">Все продукты</option>
-            {% for answer in order_answers %}
-                <option value="{{ answer.order_product.product.name }}">{{ answer.order_product.product.name }}</option>
+            {% for answer in products %}
+                <option value="{{ answer }}">{{ answer }}</option>
             {% endfor %}
         </select>
     </div>
