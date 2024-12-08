@@ -21,5 +21,4 @@ urlpatterns = [
     path("update-answers/<int:pk>/", update_answer_on_order, name="update_answers"),
 
 
-
 ]

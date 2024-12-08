@@ -52,3 +52,12 @@ class PriceAnalysisForm(forms.ModelForm):
     class Meta:
         model = PriceAnalysis
         fields = ['order', 'answer']
+
+
+class FilterForm(forms.Form):
+    search = forms.CharField(
+        required=False, max_length=100, widget=forms.TextInput(attrs={
+            'class': 'form-control', 'placeholder': 'Введите номер заказа'
+        }),
+        label='Поиск'
+    )

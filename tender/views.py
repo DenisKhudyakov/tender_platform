@@ -9,7 +9,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 
 from tender.forms import ProductForm, OrderForm, OrderProductForm, AnswerOnOrderForm, PriceAnalysisForm, \
-    AnswerOnOrderFormSet, ProductFormSet
+    AnswerOnOrderFormSet, ProductFormSet, FilterForm
 from tender.models import OrderProduct, Order, Product, AnswerOnOrder, PriceAnalysis
 from users.models import User
 
@@ -86,8 +86,20 @@ class OrderProductListView(ListView):
     model = OrderProduct
     context_object_name = 'order_products'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = FilterForm(self.request.GET or None)
+        context['form'] = form
+        return context
+
     def get_queryset(self):
-        return super().get_queryset().distinct('order')
+        queryset = super().get_queryset().distinct('order')
+        form = FilterForm(self.request.GET or None)
+        if form.is_valid():
+            search = form.cleaned_data['search']
+            if search:
+                queryset = queryset.filter(order__id__icontains=search)
+        return queryset
 
 
 class OrderProductDetailView(DetailView):
@@ -175,7 +187,6 @@ class AnswerOnOrderListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs) # важно передать **kwargs
         context['order_answers'] = self.get_queryset() # более описательное имя
         return context
-
 
 
 

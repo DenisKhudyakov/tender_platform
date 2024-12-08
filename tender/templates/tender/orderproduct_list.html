@@ -1,7 +1,15 @@
 {% extends 'tender/base.html' %}
 {% block content %}
+{% load crispy_forms_tags %}
 <main class="container my-5">
     <h3 class="mb-4">Заявки для поставщиков</h3>
+    <form method="get" class="row g-2 align-items-center mb-3">
+    <div class="col-auto">
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Искать</button>
+    </div>
+
+    </form>
     <div class="list-group">
         {% for order_product in order_products %}
             <a
