@@ -41,35 +41,43 @@
     </table>
 </div>
     <script>
-                document.addEventListener('DOMContentLoaded', function() {
-          const table = document.querySelector('.table');
-          const rows = table.querySelectorAll('tbody tr');
+    document.addEventListener('DOMContentLoaded', function() {
+        const table = document.querySelector('.table');
+        const rows = table.querySelectorAll('tbody tr');
 
-          // Создаем словарь для хранения минимальных цен для каждого продукта
-          const minPrices = {};
+        // Создаем объект для хранения минимальных цен для каждого продукта
+        const minPrices = {};
 
-          rows.forEach(row => {
-            const supplier = row.querySelector('td:nth-child(1)').textContent;
-            const product = row.querySelector('td:nth-child(2)').textContent;
-            const price = parseFloat(row.querySelector('td:nth-child(3)').textContent);
+        rows.forEach(row => {
+            const product = row.querySelector('td:nth-child(2)').textContent.trim();
+            const price = parseFloat(row.querySelector('td:nth-child(3)').textContent.trim());
+
+            // Игнорируем строки, где цена равна 0
+            if (price === 0) return;
+
+            // Если продукта ещё нет в объекте, добавляем его
+            if (!minPrices[product]) {
+                minPrices[product] = price;
+            } else {
+                // Обновляем минимальную цену, если текущая цена меньше
+                minPrices[product] = Math.min(minPrices[product], price);
+            }
+        });
+
+        // Проходим по строкам снова, чтобы подсветить минимальные цены
+        rows.forEach(row => {
+            const product = row.querySelector('td:nth-child(2)').textContent.trim();
+            const price = parseFloat(row.querySelector('td:nth-child(3)').textContent.trim());
             const priceCell = row.querySelector('td.price');
 
-            // Генерируем ключ для словаря, который объединяет продукт и поставщика
-            const key = `${product}-${supplier}`;
-
-            // Если ключ не существует, или текущая цена меньше существующей минимальной цены, обновляем минимальную цену
-            if (!minPrices[product] || price < minPrices[product].price) {
-              minPrices[product] = { price: price, row: row };
+            // Если текущая цена равна минимальной для данного продукта, подсвечиваем её
+            if (price === minPrices[product]) {
+                priceCell.style.backgroundColor = 'lightgreen';
             }
-          });
-
-          // Проходим по каждому товару и подсвечиваем ячейку с минимальной ценой
-          for (const product in minPrices) {
-            const row = minPrices[product].row;
-            row.querySelector('td.price').style.backgroundColor = 'lightgreen';
-          }
         });
-        document.getElementById("productFilter").addEventListener("change", function() {
+    });
+
+    document.getElementById("productFilter").addEventListener("change", function() {
         const selectedProduct = this.value.toLowerCase();
         const rows = document.querySelectorAll("#dataTable tr");
 
@@ -82,7 +90,7 @@
             }
         });
     });
+</script>
 
-    </script>
 
 {% endblock %}

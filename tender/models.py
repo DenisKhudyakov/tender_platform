@@ -56,6 +56,13 @@ class Order(models.Model):
         help_text='Пропишите краткое описание о товарах в заявке',
         **NULLABLE
     )
+    duration = models.DateField(
+        verbose_name='Срок ответа', help_text='Крайняя дата получения ответов на заявку', **NULLABLE
+    )
+    is_active = models.BooleanField(
+        default=True, verbose_name='Актуальная заявка', help_text='Актуальна ли ещё заявка?'
+    )
+
 
     def __str__(self):
         return f"Заявка {self.id}"
