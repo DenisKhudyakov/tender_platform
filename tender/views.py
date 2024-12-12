@@ -1,12 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import IntegrityError
+from django.db.models import Q
 from django.forms import formset_factory
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import (CreateView, DetailView, FormView, ListView,
+from django.views.generic import (CreateView, DetailView, ListView,
                                   UpdateView)
 
 from tender.forms import (AnswerOnOrderForm, AnswerOnOrderFormSet, FilterForm,
@@ -14,7 +14,6 @@ from tender.forms import (AnswerOnOrderForm, AnswerOnOrderFormSet, FilterForm,
                           ProductForm, ProductFormSet)
 from tender.models import (AnswerOnOrder, Order, OrderProduct, PriceAnalysis,
                            Product)
-from users.models import User
 
 
 class OrderListView(ListView):
@@ -40,11 +39,12 @@ class ProductCreateView(CreateView):
     success_url = reverse_lazy("tender:questions")
 
 
+@login_required
 def questions_for_products(request):
     return render(request, template_name="tender/questions_for_product.html")
 
 
-class OrderCreateView(CreateView):
+class OrderCreateView(LoginRequiredMixin, CreateView):
     model = Order
     form_class = OrderForm
     context_object_name = "orders"
@@ -55,7 +55,7 @@ class OrderCreateView(CreateView):
         return redirect(reverse("tender:order_detail", args=[order.id]))
 
 
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     context_object_name = "products"
 
@@ -85,7 +85,7 @@ class ProductListView(ListView):
         return redirect("tender:product_list", pk=order_pk)
 
 
-class OrderProductListView(ListView):
+class OrderProductListView(LoginRequiredMixin, ListView):
     model = OrderProduct
     context_object_name = "order_products"
 
@@ -101,11 +101,12 @@ class OrderProductListView(ListView):
         if form.is_valid():
             search = form.cleaned_data["search"]
             if search:
-                queryset = queryset.filter(order__id__icontains=search)
+                queryset = queryset.filter(Q(order__id__icontains=search) | Q(order__number_ERP__icontains=search))
+
         return queryset
 
 
-class OrderProductDetailView(DetailView):
+class OrderProductDetailView(LoginRequiredMixin, DetailView):
     model = OrderProduct
     context_object_name = "order_product"
 
@@ -119,6 +120,7 @@ class OrderProductDetailView(DetailView):
         return context
 
 
+@login_required
 def create_answer_on_order(request, pk):
     order = get_object_or_404(OrderProduct, pk=pk).order
 
@@ -155,6 +157,7 @@ def create_answer_on_order(request, pk):
     return render(request, "tender/answer_on_order.html", context)
 
 
+@login_required
 def update_answer_on_order(request, pk):
     order = get_object_or_404(Order, pk=pk)
 

@@ -43,6 +43,20 @@ class Order(models.Model):
         help_text="Товары в заявке",
     )
 
+    number_ERP = models.CharField(
+        max_length=15,
+        verbose_name='Номер заказа из 1С',
+        help_text='Номер заказа из 1С, не обязательное поле',
+        **NULLABLE
+    )
+
+    description = models.TextField(
+        max_length=255,
+        verbose_name='Краткое описание заявки',
+        help_text='Пропишите краткое описание о товарах в заявке',
+        **NULLABLE
+    )
+
     def __str__(self):
         return f"Заявка {self.id}"
 

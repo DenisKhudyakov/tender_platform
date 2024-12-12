@@ -13,8 +13,12 @@ class ProductForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = []
+        fields = ['number_ERP', 'description']
         help_texts = "Создайте заявку, чтобы в дальнейшем добавить в неё товары"
+        widgets = {
+            'number_ERP': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+        }
 
 
 class OrderProductForm(forms.ModelForm):

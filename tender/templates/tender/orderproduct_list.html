@@ -16,11 +16,27 @@
                 href="{% url 'tender:order_product_detail' pk=order_product.id %}"
                 class="list-group-item list-group-item-action"
             >
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ order_product.order }}</h5>
-                    <small>{{ order_product.created_at|date:"d.m.Y" }}</small>
+                <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-lg-between py-2 border-bottom">
+                    <div class="text-start">
+                    <h5 class="mb-1 fw-bold">{{ order_product.order }}</h5>
+                    <small class="text-muted">
+                        {% if order_product.order.description %}
+                            {{ order_product.order.description }}
+                        {% else %}
+                            Описание отсутствует
+                        {% endif %}
+                    </small>
                 </div>
-                <p class="mb-1 text-muted">{{ order_product.description|truncatechars:100 }}</p>
+                <div class="text-lg-end mt-2 mt-lg-0">
+                    <h5 class="mb-0 text-primary">
+                        {% if order_product.order.number_ERP %}
+                            {{ order_product.order.number_ERP }}
+                        {% else %}
+                            Номер заказа из ERP отсутствует
+                        {% endif %}
+                    </h5>
+                </div>
+                </div>
                 <small class="text-success">Подробнее</small>
             </a>
         {% empty %}
