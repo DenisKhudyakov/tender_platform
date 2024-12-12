@@ -7,7 +7,7 @@
             <div class="card shadow">
                 <div class="card-body">
                 <p class="text-muted mb-4">Создайте заявку, чтобы в дальнейшем добавить в неё товары</p>
-                    <form method="post" action="{% url 'tender:order_create' %}">
+                    <form method="post">
                         {% csrf_token %}
                         <!-- Отображение ошибок формы -->
                         {% if form.non_field_errors %}
@@ -35,9 +35,12 @@
                                 {% endif %}
                             </div>
                         {% endfor %}
-
+                        {% if order %}
+                            <button type="submit" class="btn btn-success w-100">Обновить заявку</button>
+                        {% else %}
                         <!-- Кнопка -->
-                        <button type="submit" class="btn btn-success w-100">Создать заявку</button>
+                            <button type="submit" class="btn btn-success w-100">Создать заявку</button>
+                        {% endif %}
                     </form>
                 </div>
             </div>

@@ -6,7 +6,7 @@ from tender.views import (AnswerOnOrderListView, OrderCreateView,
                           OrderProductDetailView, OrderProductListView,
                           ProductCreateView, ProductListView,
                           create_answer_on_order, questions_for_products,
-                          update_answer_on_order)
+                          update_answer_on_order, OrderUpdateView)
 
 app_name = TenderConfig.name
 
@@ -28,4 +28,5 @@ urlpatterns = [
         "price_analys/<int:pk>/", AnswerOnOrderListView.as_view(), name="price_analys"
     ),
     path("update-answers/<int:pk>/", update_answer_on_order, name="update_answers"),
+    path('update_order/<int:pk>/', OrderUpdateView.as_view(), name="update_order"),
 ]

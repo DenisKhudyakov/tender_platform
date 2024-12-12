@@ -1,5 +1,8 @@
+from datetime import date
+
 from django import forms
-from django.forms import formset_factory, modelformset_factory
+from django.forms import formset_factory, modelformset_factory, DateInput
+from rest_framework.exceptions import ValidationError
 
 from .models import AnswerOnOrder, Order, OrderProduct, PriceAnalysis, Product
 
@@ -10,15 +13,29 @@ class ProductForm(forms.ModelForm):
         fields = ["name", "article", "measurement"]
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['number_ERP', 'description']
-        help_texts = "Создайте заявку, чтобы в дальнейшем добавить в неё товары"
+        fields = ['number_ERP', 'description', 'duration', 'is_active']
         widgets = {
             'number_ERP': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'duration': DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
+        help_texts = {
+            'description': "Создайте заявку, чтобы в дальнейшем добавить в неё товары",
+        }
+
+    def clean_duration(self):
+        duration = self.cleaned_data.get('duration')
+        if duration and duration < date.today():
+            raise ValidationError("Дата не может быть в прошлом.")
+        return duration
 
 
 class OrderProductForm(forms.ModelForm):

@@ -1,12 +1,35 @@
 {% extends 'tender/base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
     <main class="container my-5">
         <h3 class="mb-4">Список заявок, в который необходимо добавлять товары</h3>
+        <form method="get" class="row g-2 align-items-center mb-3">
+            <div class="col-auto">
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary">Искать</button>
+            </div>
 
+        </form>
         <div class="list-group">
         {% for order in orders %}
-            <a class="list-group-item list-group-item-action" href="{% url 'tender:order_detail' pk=order.pk %}">
-                Заявка номер: {{ order.id }}</a>
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="{% url 'tender:order_detail' pk=order.pk %}">
+              <div>
+                <div class="fw-bold">Заявка номер: {{ order.id }}</div>
+                {% if order.number_ERP %}
+                  <div>Номер ERP: {{ order.number_ERP }}</div>
+                {% endif %}
+                {% if order.duration %}
+                  <div>Срок действия: {{ order.duration|date:"d.m.Y" }}</div>
+                {% endif %}
+                {% if order.is_active %}
+                  <div class="text-success">Активна</div>
+                {% else %}
+                  <div class="text-danger">Не активна</div>
+                {% endif %}
+              </div>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+
             <br>
         {% endfor %}
         </div>

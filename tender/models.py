@@ -57,7 +57,8 @@ class Order(models.Model):
         **NULLABLE
     )
     duration = models.DateField(
-        verbose_name='Срок ответа', help_text='Крайняя дата получения ответов на заявку', **NULLABLE
+        verbose_name='Срок ответа', help_text='Крайняя дата получения ответов на заявку, формат ДД.ММ.ГГГГ',
+        **NULLABLE
     )
     is_active = models.BooleanField(
         default=True, verbose_name='Актуальная заявка', help_text='Актуальна ли ещё заявка?'

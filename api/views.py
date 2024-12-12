@@ -21,11 +21,15 @@ class CreateOrderWithProductsView(APIView):
     Тестовые данные
     {
     "products": [
-        {"name": "Продукт 1", "article": "ART001", "measurement": "кг"},
-        {"name": "Продукт 2", "article": "ART002", "measurement": "шт"}
+        {"article": "12345", "name": "Product A", "measurement": "шт"},
+        {"article": "67890", "name": "Product B", "measurement": "кг"}
     ],
-    "amounts": [10.5, 3.2]
+    "amounts": [10, 20],
+    "number_ERP": "ERP12345",
+    "description": "Закупка товаров для проекта",
+    "duration": "2024-12-31",
     }
+
     """
 
     def post(self, request, *args, **kwargs):

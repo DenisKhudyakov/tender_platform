@@ -10,6 +10,9 @@
                 <a href="{% url 'tender:product_list' pk=order.id %}" class="btn btn-success">
                     Добавить товары в заказ
                 </a>
+                <a href="{% url 'tender:update_order' pk=order.id %}" class="btn btn-primary">
+                    Обновить заявку
+                </a>
             </p>
 
             <h3 class="mt-4">Товары в заявке</h3>

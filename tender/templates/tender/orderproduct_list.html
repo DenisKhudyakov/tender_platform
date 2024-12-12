@@ -37,7 +37,12 @@
                     </h5>
                 </div>
                 </div>
-                <small class="text-success">Подробнее</small>
+                <div>Срок действия заявки: {{ order_product.order.duration|date:"d.m.Y" }}</div>
+                {% if order_product.order.is_active %}
+                	<div>Заявка актуальна</div>
+                {% else %}
+                    <div>Заявка не актуальна</div>
+                {% endif %}
             </a>
         {% empty %}
             <div class="alert alert-warning" role="alert">

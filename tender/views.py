@@ -1,27 +1,44 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db import IntegrityError
 from django.db.models import Q
 from django.forms import formset_factory
-from django.http import Http404, JsonResponse
+from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views import View
 from django.views.generic import (CreateView, DetailView, ListView,
                                   UpdateView)
 
 from tender.forms import (AnswerOnOrderForm, AnswerOnOrderFormSet, FilterForm,
-                          OrderForm, OrderProductForm, PriceAnalysisForm,
-                          ProductForm, ProductFormSet)
-from tender.models import (AnswerOnOrder, Order, OrderProduct, PriceAnalysis,
+                          OrderForm, OrderProductForm,
+                          ProductForm)
+from tender.models import (AnswerOnOrder, Order, OrderProduct,
                            Product)
+from tender.permissions import IsEmployerMixin
 
 
-class OrderListView(ListView):
+class OrderListView(IsEmployerMixin, ListView):
     model = Order
     context_object_name = "orders"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = FilterForm(self.request.GET or None)
+        context["form"] = form
+        return context
 
-class OrderDetailView(DetailView):
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        form = FilterForm(self.request.GET or None)
+        if form.is_valid():
+            search = form.cleaned_data["search"]
+            if search:
+                queryset = queryset.filter(Q(id__icontains=search) | Q(number_ERP__icontains=search))
+
+        return queryset
+
+
+class OrderDetailView(IsEmployerMixin, DetailView):
     model = Order
     template_name = "tender/order_detail.html"
     context_object_name = "order"
@@ -44,18 +61,39 @@ def questions_for_products(request):
     return render(request, template_name="tender/questions_for_product.html")
 
 
-class OrderCreateView(LoginRequiredMixin, CreateView):
+class OrderCreateView(IsEmployerMixin, CreateView):
     model = Order
     form_class = OrderForm
     context_object_name = "orders"
     template_name = "tender/order_form.html"
 
     def form_valid(self, form):
-        order = form.save()
-        return redirect(reverse("tender:order_detail", args=[order.id]))
+        try:
+            order = form.save()
+            return redirect(reverse("tender:order_detail", args=[order.id]))
+        except Exception as e:
+            return HttpResponseBadRequest(f"Ошибка создания: {e}")
 
 
-class ProductListView(LoginRequiredMixin, ListView):
+class OrderUpdateView(IsEmployerMixin, UpdateView):
+    model = Order
+    form_class = OrderForm
+    context_object_name = "order"
+    template_name = "tender/order_form.html"
+
+    success_url = reverse_lazy("tender:order_list")
+
+    def form_valid(self, form):
+        try:
+            form.save()
+            return redirect(self.get_success_url())
+        except IntegrityError as e:
+            return HttpResponseBadRequest(f"Ошибка обновления: {e}")
+        except Exception as e:
+            return HttpResponseBadRequest(f"Ошибка обновления: {e}")
+
+
+class ProductListView(IsEmployerMixin, ListView):
     model = Product
     context_object_name = "products"
 
@@ -184,7 +222,7 @@ def update_answer_on_order(request, pk):
     )
 
 
-class AnswerOnOrderListView(LoginRequiredMixin, ListView):
+class AnswerOnOrderListView(IsEmployerMixin, ListView):
     """
     Контроллер анализа цен, выводим все ответы на заявку по номеру заявки
     """
