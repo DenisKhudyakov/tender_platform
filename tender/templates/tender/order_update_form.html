@@ -1,12 +1,11 @@
 {% extends 'tender/base.html' %}
 {% block content %}
 <main class="container my-5">
-    <h2 class="mb-4 text-center">Создание заявки</h2>
+    <h2 class="mb-4 text-center">Обновление заявки</h2>
     <div class="row justify-content-center">
         <div class="col-lg-4 col-md-6">
             <div class="card shadow">
                 <div class="card-body">
-                <p class="text-muted mb-4">Создайте заявку, чтобы в дальнейшем добавить в неё товары</p>
                     <form method="post">
                         {% csrf_token %}
                         <!-- Отображение ошибок формы -->
@@ -35,8 +34,9 @@
                                 {% endif %}
                             </div>
                         {% endfor %}
-                        <!-- Кнопка -->
-                        <button type="submit" class="btn btn-success w-100">Создать заявку</button>
+
+                        <button type="submit" class="btn btn-success w-100">Обновить заявку</button>
+
                     </form>
                 </div>
             </div>

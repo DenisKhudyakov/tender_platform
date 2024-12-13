@@ -80,3 +80,13 @@ class FilterForm(forms.Form):
         ),
         label="Поиск",
     )
+
+
+class FilterProductForm(FilterForm):
+    search = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Введите артикул"}),
+        required=False,
+        max_length=100,
+        label="Поиск"
+
+    )
