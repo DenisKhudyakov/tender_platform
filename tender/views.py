@@ -292,7 +292,7 @@ class AnswerOnOrderListView(IsEmployerMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)  # важно передать **kwargs
         order_answers = self.get_queryset()
-        context["order_answers"] = order_answers  # более описательное имя
+        context["order_answers"] = order_answers
         unique_products = order_answers.values_list(
             "order_product__product__name", flat=True
         ).distinct()
