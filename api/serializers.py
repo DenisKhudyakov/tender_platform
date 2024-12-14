@@ -23,24 +23,21 @@ class OrderProductCreateSerializer(serializers.Serializer):
         required=False,
         allow_null=True,
         allow_blank=True,
-        help_text="Номер заказа из 1С, не обязательное поле."
+        help_text="Номер заказа из 1С, не обязательное поле.",
     )
     description = serializers.CharField(
         max_length=255,
         required=False,
         allow_null=True,
         allow_blank=True,
-        help_text="Краткое описание заявки."
+        help_text="Краткое описание заявки.",
     )
     duration = serializers.DateField(
         required=False,
         allow_null=True,
-        help_text="Крайняя дата получения ответов на заявку. Формат: ДД.ММ.ГГГГ."
+        help_text="Крайняя дата получения ответов на заявку. Формат: ДД.ММ.ГГГГ.",
     )
-    is_active = serializers.BooleanField(
-        default=True,
-        help_text="Актуальна ли заявка?"
-    )
+    is_active = serializers.BooleanField(default=True, help_text="Актуальна ли заявка?")
 
     def validate(self, attrs):
         products = attrs.get("products")
@@ -68,7 +65,7 @@ class OrderProductCreateSerializer(serializers.Serializer):
             number_ERP=number_ERP,
             description=description,
             duration=duration,
-            is_active=is_active
+            is_active=is_active,
         )
 
         for product_info, amount in zip(product_data, amounts):

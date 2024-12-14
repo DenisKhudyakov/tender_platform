@@ -6,18 +6,19 @@ from django.forms import formset_factory
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import (CreateView, DetailView, ListView,
-                                  UpdateView)
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from tender.forms import (AnswerOnOrderForm, AnswerOnOrderFormSet, FilterForm,
-                          OrderForm, OrderProductForm,
-                          ProductForm, FilterProductForm)
-from tender.models import (AnswerOnOrder, Order, OrderProduct,
-                           Product)
+                          FilterProductForm, OrderForm, OrderProductForm,
+                          ProductForm)
+from tender.models import AnswerOnOrder, Order, OrderProduct, Product
 from tender.permissions import IsEmployerMixin
 
 
 class OrderListView(IsEmployerMixin, ListView):
+    """
+    Просмотр всех заявок, для сотрудников
+    """
     model = Order
     context_object_name = "orders"
     paginate_by = 5
@@ -34,12 +35,17 @@ class OrderListView(IsEmployerMixin, ListView):
         if form.is_valid():
             search = form.cleaned_data["search"]
             if search:
-                queryset = queryset.filter(Q(id__icontains=search) | Q(number_ERP__icontains=search))
+                queryset = queryset.filter(
+                    Q(id__icontains=search) | Q(number_ERP__icontains=search)
+                )
 
         return queryset
 
 
 class OrderDetailView(IsEmployerMixin, DetailView):
+    """
+    Контроллер просмотра своей заявки для сотрудников
+    """
     model = Order
     template_name = "tender/order_detail.html"
     context_object_name = "order"
@@ -52,6 +58,7 @@ class OrderDetailView(IsEmployerMixin, DetailView):
 
 
 class ProductCreateView(CreateView):
+    """Контроллер создания товаров"""
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy("tender:questions")
@@ -59,10 +66,16 @@ class ProductCreateView(CreateView):
 
 @login_required
 def questions_for_products(request):
+    """
+    При создании товара запрос: 'Хотите ли вы создать ещё товар?'
+    """
     return render(request, template_name="tender/questions_for_product.html")
 
 
 class OrderCreateView(IsEmployerMixin, CreateView):
+    """
+    Контроллер создания заявки
+    """
     model = Order
     form_class = OrderForm
     context_object_name = "orders"
@@ -77,6 +90,9 @@ class OrderCreateView(IsEmployerMixin, CreateView):
 
 
 class OrderUpdateView(IsEmployerMixin, UpdateView):
+    """
+    Контролер обновления заявки, например поменять её статус
+    """
     model = Order
     form_class = OrderForm
     context_object_name = "order"
@@ -95,6 +111,9 @@ class OrderUpdateView(IsEmployerMixin, UpdateView):
 
 
 class ProductListView(IsEmployerMixin, ListView):
+    """
+    Контроллер отображения всех товаров
+    """
     model = Product
     context_object_name = "products"
     paginate_by = 10
@@ -138,6 +157,9 @@ class ProductListView(IsEmployerMixin, ListView):
 
 
 class OrderProductListView(LoginRequiredMixin, ListView):
+    """
+    Контроллер отображения всех заявок для поставщиков
+    """
     model = OrderProduct
     context_object_name = "order_products"
     paginate_by = 7
@@ -154,12 +176,18 @@ class OrderProductListView(LoginRequiredMixin, ListView):
         if form.is_valid():
             search = form.cleaned_data["search"]
             if search:
-                queryset = queryset.filter(Q(order__id__icontains=search) | Q(order__number_ERP__icontains=search))
+                queryset = queryset.filter(
+                    Q(order__id__icontains=search)
+                    | Q(order__number_ERP__icontains=search)
+                )
 
         return queryset
 
 
 class OrderProductDetailView(LoginRequiredMixin, DetailView):
+    """
+    Контроллер просмотра товаров в конкретной заявке
+    """
     model = OrderProduct
     context_object_name = "order_product"
 
@@ -175,6 +203,9 @@ class OrderProductDetailView(LoginRequiredMixin, DetailView):
 
 @login_required
 def create_answer_on_order(request, pk):
+    """
+    Контроллер ответа на заявку
+    """
     order = get_object_or_404(OrderProduct, pk=pk).order
 
     order_products = OrderProduct.objects.filter(order=order)
@@ -193,10 +224,10 @@ def create_answer_on_order(request, pk):
                 print(f"пользователь {request.user}")
                 answer.supplier = (
                     request.user
-                )  # Устанавливаем текущего пользователя как поставщика
+                )
                 print(f"Поставщик загружен {answer.supplier}")
                 answer.save()
-            return redirect("tender:order_products")  # Перенаправление после сохранения
+            return redirect("tender:order_products")
     else:
 
         initial_data = [{"order_product": product} for product in order_products]
@@ -212,6 +243,9 @@ def create_answer_on_order(request, pk):
 
 @login_required
 def update_answer_on_order(request, pk):
+    """
+    Контроллер обновления ответа на заявку
+    """
     order = get_object_or_404(Order, pk=pk)
 
     answer = AnswerOnOrder.objects.filter(

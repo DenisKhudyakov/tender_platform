@@ -45,25 +45,27 @@ class Order(models.Model):
 
     number_ERP = models.CharField(
         max_length=15,
-        verbose_name='Номер заказа из 1С',
-        help_text='Номер заказа из 1С, не обязательное поле',
-        **NULLABLE
+        verbose_name="Номер заказа из 1С",
+        help_text="Номер заказа из 1С, не обязательное поле",
+        **NULLABLE,
     )
 
     description = models.TextField(
         max_length=255,
-        verbose_name='Краткое описание заявки',
-        help_text='Пропишите краткое описание о товарах в заявке',
-        **NULLABLE
+        verbose_name="Краткое описание заявки",
+        help_text="Пропишите краткое описание о товарах в заявке",
+        **NULLABLE,
     )
     duration = models.DateField(
-        verbose_name='Срок ответа', help_text='Крайняя дата получения ответов на заявку, формат ДД.ММ.ГГГГ',
-        **NULLABLE
+        verbose_name="Срок ответа",
+        help_text="Крайняя дата получения ответов на заявку, формат ДД.ММ.ГГГГ",
+        **NULLABLE,
     )
     is_active = models.BooleanField(
-        default=True, verbose_name='Актуальная заявка', help_text='Актуальна ли ещё заявка?'
+        default=True,
+        verbose_name="Актуальная заявка",
+        help_text="Актуальна ли ещё заявка?",
     )
-
 
     def __str__(self):
         return f"Заявка {self.id}"
@@ -96,9 +98,10 @@ class OrderProduct(models.Model):
     )
 
     def __str__(self):
-        return (f""
-                f"{self.order}, Артикул: {self.product.article}, Наименование: {self.product.name}, "
-                f"Количество: {self.amounts} {self.product.measurement}"
+        return (
+            f""
+            f"Артикул: {self.product.article}, Наименование: {self.product.name}, "
+            f"Количество: {self.amounts} {self.product.measurement}"
         )
 
     class Meta:
@@ -128,7 +131,7 @@ class AnswerOnOrder(models.Model):
         max_digits=10,
         decimal_places=2,
         verbose_name="Цена",
-        help_text="Стоимость товара, в рублях",
+        help_text="Стоимость товара (в рублях, с НДС).",
         default=0,
     )
     delivery_time = models.CharField(
@@ -148,7 +151,7 @@ class AnswerOnOrder(models.Model):
 
 class PriceAnalysis(models.Model):
     """
-    Модель анализа цен
+    Модель анализа цен, опционально. не применено в проекте
     """
 
     order = models.ForeignKey(

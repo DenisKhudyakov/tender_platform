@@ -19,6 +19,9 @@
                     <div class="input-group">
                         {{ form.price }}  <!-- Поле цены -->
                     </div>
+                    {% if form.price.help_text %}
+                        <div class="form-text">{{ form.price.help_text }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="mb-3">

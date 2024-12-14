@@ -23,9 +23,6 @@ class SignUpForm(UserCreationForm):
             attrs={"class": "form-control", "placeholder": "Логин"}
         ),
     )
-    # company_name = forms.CharField(max_length=255, help_text='Введите название организации. Для поставщиков')
-    # phone = forms.CharField(max_length=255, help_text='Введите номер телефона')
-    # inn = forms.CharField(max_length=12, help_text='Введите ИНН организации. Для поставщиков')
     password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={"class": "form-control", "placeholder": "Введите пароль"}

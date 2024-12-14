@@ -7,15 +7,26 @@ from users.forms import LoginForm, SignUpForm
 
 
 def main(request):
+    """
+    Отображение главной страница
+    """
     return render(request, "users/main.html")
 
 
 class UserLogin(LoginView):
+    """
+    Контроллер авторизации
+    """
+
     form_class = LoginForm
     template_name = "users/authorization.html"
 
 
 class UserCreate(CreateView):
+    """
+    Контроллер регистрации пользователя
+    """
+
     template_name = "users/registration.html"
     form_class = SignUpForm
     success_url = reverse_lazy("users:login")

@@ -45,7 +45,8 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
 
     def __str__(self):
-        return f"Почта: {self.email}, " \
-                f"Компания: {self.company_name if self.company_name else 'Не указана'}, " \
-                f"Телефон: {self.phone if self.phone else 'Не указан'}"
-
+        return (
+            f"Почта: {self.email}, "
+            f"Компания: {self.company_name if self.company_name else 'Не указана'}, "
+            f"Телефон: {self.phone if self.phone else 'Не указан'}"
+        )
