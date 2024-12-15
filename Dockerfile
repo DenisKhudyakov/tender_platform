@@ -22,14 +22,10 @@ RUN poetry config virtualenvs.create false \
 
 COPY . .
 
-# Копируем скрипт ожидания базы данных
 COPY wait_for_db.sh /wait_for_db.sh
 RUN chmod +x /wait_for_db.sh
 
-# Сбор статики
-RUN python manage.py collectstatic --noinput
 
-# Команда запуска
 CMD ["/wait_for_db.sh", "sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py csu && gunicorn --bind 0.0.0.0:8000 config.wsgi:application"]
 
 EXPOSE 8000
